@@ -1,0 +1,29 @@
+Version:
+  label: Which ACS version do you want to use?
+  options:
+    - 7.3
+    - 7.4
+Database:
+  label: Which Database engine do you want to use?
+  options:
+    - postgres
+    - mariadb
+Messaging:
+  label: Do you want to use the Events service (ActiveMQ)?
+  options:
+    - Yes
+    - No
+LegacyUI:
+  label: Do you want to use the Legacy UI (Share)?
+  options:
+    - Yes
+    - No
+Volumes:
+  label: Which container volume method do you want to use?
+  options:
+    - None
+    - Native
+    - Bind
+Server:
+  label: What is the name of your server?
+  default: localhost
