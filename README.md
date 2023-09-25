@@ -140,7 +140,9 @@ $ docker compose up --build
 
 ## Creating your own template
 
-Templates can be created using [text/template](https://pkg.go.dev/text/template) format.
+A Docker Init template is composed by a root folder that contains a set of `.tpl` files. The name of the template is given by this root folder name.
+
+Templates, with `.tpl` extension, can be created using [text/template](https://pkg.go.dev/text/template) format.
 
 In addition to Docker assets, a file named `prompts.yaml` must be located in template root folder. This file includes options to be gathered from user interaction or retrieved as command line parameters.
 
@@ -182,4 +184,15 @@ For instance:
 Server:
   label: What is the name of your server?
   default: localhost
+```
+
+For instance, following folder hierarchy would be defining the template `elk`:
+
+```bash
+elk
+├── README.md.tpl
+├── compose.yaml.tpl
+├── prompts.yaml
+└── proxy
+    └── nginx.conf.tpl
 ```
