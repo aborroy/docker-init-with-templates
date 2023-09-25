@@ -186,7 +186,9 @@ Server:
   default: localhost
 ```
 
-For instance, following folder hierarchy would be defining the template `elk`:
+### Folder structure
+
+As a sample, following folder hierarchy would be defining the template `elk`:
 
 ```bash
 elk
