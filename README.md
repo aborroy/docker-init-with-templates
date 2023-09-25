@@ -8,7 +8,11 @@ Download the binary compiled for your architecture (Linux, Windows or Mac OS) fr
 
 >> You may rename the binary to `fake-docker`, all the following samples are using this command name by default.
 
-Using `-h` flag provides detail on the use of the different commands available:
+Using `-h` flag provides detail on the use of the different commands available.
+
+**Init**
+
+`Init` command produces Docker assets using a selected `template`.
 
 ```bash
 $ ./fake-docker init -h
@@ -31,6 +35,10 @@ Flags:
 Use "docker init [command] --help" for more information about a command.
 ```
 
+**Init Catalog**
+
+`Init Catalog` provides information relative to existing templates, reading from default inner `templates` folder or available in external `directory`
+
 ```bash
 $ ./fake-docker init catalog -h
 Catalog Command
@@ -39,11 +47,14 @@ Usage:
   docker init catalog [flags]
 
 Flags:
+  -d, --directory string  Local Directory containing templates to be used
   -h, --help              help for catalog
   -t, --template string   Name of the template to get details
 ```
 
-## Testing sample template
+## Testing default templates
+
+Default templates are provided in project's [templates](templates) folder.
 
 Use included `alfresco` template by using the `-t` flag:
 
@@ -87,7 +98,45 @@ Alfresco can be tested using a regular Docker command:
 ```bash
 $ cd output
 $ docker compose up
-````
+```
+
+## Testing external templates
+
+The project includes a sample for external templates definition in folder [_samples](_samples).
+
+Use included `nginx-golang-db` template from external directory by using following flags:
+
+```bash
+$ ./fake-docker init -d _samples -t nginx-golang-db
+✔ postgres
+```
+
+Docker assets will be produced by default in `output` folder:
+
+```bash
+$ tree output
+output
+├── README.md
+├── backend
+│   ├── Dockerfile
+│   ├── go.mod
+│   ├── go.sum
+│   └── main.go
+├── compose.yaml
+├── db
+│   └── password.txt
+└── proxy
+    └── nginx.conf
+```
+
+It can be tested using a regular Docker command:
+
+```bash
+$ cd output
+$ docker compose up --build
+```
+
+>> Review generated `README.md` file in `output` folder for additional testing instructions.
 
 ## Creating your own template
 

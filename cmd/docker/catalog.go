@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/aborroy/docker-init-with-templates/pkg"
 	"github.com/spf13/cobra"
 )
 
@@ -19,12 +20,33 @@ var catalogCmd = &cobra.Command{
 				log.Fatal(err)
 			}
 			for _, f := range files {
-				fmt.Println(f.Name())
+				if !pkg.IsHidden(f.Name()) {
+					fmt.Println(f.Name())
+				}
+			}
+			if templateDirectory != "" {
+				files, err := os.ReadDir(templateDirectory)
+				if err != nil {
+					log.Fatal(err)
+				}
+				for _, f := range files {
+					if !pkg.IsHidden(f.Name()) {
+						fmt.Println(f.Name())
+					}
+				}
 			}
 		} else {
 			body, err := os.ReadFile("templates/" + templateName + "/prompts.yaml")
 			if err != nil {
-				log.Fatalf("unable to read file: %v", err)
+				if templateDirectory == "" {
+					log.Fatalf("unable to read file: %v", err)
+				} else {
+					body, err = os.ReadFile(templateDirectory + "/" + templateName + "/prompts.yaml")
+					if err != nil {
+						log.Fatalf("unable to read file: %v", err)
+					}
+				}
+
 			}
 			fmt.Println(string(body))
 		}
@@ -35,4 +57,5 @@ var catalogCmd = &cobra.Command{
 func init() {
 	initCmd.AddCommand(catalogCmd)
 	catalogCmd.Flags().StringVarP(&templateName, "template", "t", "", "Name of the template to get details")
+	catalogCmd.Flags().StringVarP(&templateDirectory, "directory", "d", "", "Local Directory containing templates to be used")
 }
