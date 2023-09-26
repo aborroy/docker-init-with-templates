@@ -41,6 +41,10 @@ services:
         -DlocalTransform.core-aio.url=http://transform-core-aio:8090/
 {{- if eq .Messaging "Yes"}}
         -Dmessaging.broker.url="failover:(nio://activemq:61616)?timeout=3000&jms.useCompression=true"
+  {{- if eq .MessagingCredentials "Yes"}}
+        -Dmessaging.broker.username={{.MessagingUser}}
+        -Dmessaging.broker.password={{.MessagingPassword}}
+  {{- end}}
 {{- else}}
         -Dmessaging.subsystem.autoStart=false
         -Drepo.event2.enabled=false

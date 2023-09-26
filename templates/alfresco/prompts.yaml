@@ -13,6 +13,20 @@ Messaging:
   options:
     - Yes
     - No
+MessagingCredentials:
+  label: Do you want to use credentials for Events service?
+  condition: Messaging==Yes
+  options:
+    - Yes
+    - No
+MessagingUser:
+   label: Choose the user name for your ActiveMQ user
+   condition: Messaging==Yes and MessagingCredentials==Yes
+   default: admin
+MessagingPassword:    
+   label: Choose the user password for your ActiveMQ user
+   condition: Messaging==Yes and MessagingCredentials==Yes
+   default: admin
 LegacyUI:
   label: Do you want to use the Legacy UI (Share)?
   options:

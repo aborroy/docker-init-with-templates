@@ -186,15 +186,37 @@ Server:
   default: localhost
 ```
 
-### Folder structure
+### Conditional
 
-As a sample, following folder hierarchy would be defining the template `elk`:
+The prompt is enabled only when a boolean `condition` is met. The condition can include any of the previous prompts as identifier and the expression is evaluated following [go-bexpr](https://github.com/hashicorp/go-bexpr) rules.
+
+```yaml
+<id>
+    label: <label>
+    [options | default]: ...
+    condition: <value>
+```
+
+For instance:
+
+```yaml
+MessagingUser:
+   label: Choose the user name for your ActiveMQ user
+   condition: Messaging==Yes and MessagingCredentials==Yes
+   default: admin
+```
+
+### Template Folder structure
+
+As a sample, following folder hierarchy would be defining the template `service`:
 
 ```bash
-elk
+service
 ├── README.md.tpl
 ├── compose.yaml.tpl
 ├── prompts.yaml
 └── proxy
     └── nginx.conf.tpl
 ```
+
+>> Note that `prompts.yaml` is the only file that doesn't include the template extension `.tpl`

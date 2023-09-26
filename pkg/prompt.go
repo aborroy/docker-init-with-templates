@@ -5,15 +5,17 @@ import (
 	"os"
 	"reflect"
 
+	"github.com/hashicorp/go-bexpr"
 	"github.com/manifoldco/promptui"
 	orderedmap "github.com/wk8/go-ordered-map/v2"
 	"gopkg.in/yaml.v3"
 )
 
 type Prompt struct {
-	Label   string   `yaml:"label"`
-	Default string   `yaml:"default"`
-	Options []string `yaml:"options"`
+	Label     string   `yaml:"label"`
+	Default   string   `yaml:"default"`
+	Condition string   `yaml:"condition"`
+	Options   []string `yaml:"options"`
 }
 
 func PromptGetSelect(prompt Prompt) string {
@@ -78,6 +80,23 @@ func setStructValues(sr reflect.Value, m map[string]interface{}) {
 	}
 }
 
+func IsPromptVisible(expression string, values map[string]interface{}) bool {
+	var visible bool = true
+	if expression != "" {
+		eval, err := bexpr.CreateEvaluator(expression)
+		if err != nil {
+			fmt.Printf("Failed to create evaluator for expression %q: %v\n", expression, err)
+			return false
+		}
+		visible, err = eval.Evaluate(values)
+		if err != nil {
+			fmt.Printf("Failed to run evaluation of expression %q: %v\n", expression, err)
+			return false
+		}
+	}
+	return visible
+}
+
 func GetPromptValues(templateRootPath string, template string, cmdPromptValues map[string]string) reflect.Value {
 
 	file, err := os.ReadFile(templateRootPath + "/" + template + "/prompts.yaml")
@@ -96,12 +115,15 @@ func GetPromptValues(templateRootPath string, template string, cmdPromptValues m
 			m[pair.Key] = cmdPromptValues[pair.Key]
 		} else {
 			var result string
-			if pair.Value.Options != nil {
-				result = PromptGetSelect(pair.Value)
-			} else {
-				result = PromptGetInput(pair.Value)
+			visible := IsPromptVisible(pair.Value.Condition, m)
+			if visible {
+				if pair.Value.Options != nil {
+					result = PromptGetSelect(pair.Value)
+				} else {
+					result = PromptGetInput(pair.Value)
+				}
+				m[pair.Key] = result
 			}
-			m[pair.Key] = result
 		}
 	}
 
