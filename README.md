@@ -153,6 +153,7 @@ Every option must be specified as select or prompt according following syntax.
 ```yaml
 <id>
     label: <label>
+    multiple: true | false
     options:
       - <option1>
       - ...
@@ -170,12 +171,15 @@ Volumes:
     - Bind
 ```
 
+By default, `multiple` is set to `false`. If more than one option is allowed to be chosen, add the `multiple: true` node. Selected values will be stored as a single string, separated with commas.
+
 ### Prompt
 
 ```yaml
 <id>
     label: <label>
     default: <value>
+    password: true | false
 ```
 
 For instance:
@@ -185,6 +189,8 @@ Server:
   label: What is the name of your server?
   default: localhost
 ```
+
+By default, `password` is set to `false`. If user typing should be screened as an asterisk string, add the `password: true` node.
 
 ### Conditional
 
