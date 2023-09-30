@@ -1,6 +1,7 @@
 package docker
 
 import (
+	"path/filepath"
 	"strings"
 	"text/template"
 
@@ -17,6 +18,11 @@ var templateName string
 var templateDirectory string
 var outputDirectory string
 var cmdPromptValues []string
+
+// Utility functions for expression evaluation in templates
+var templateFuncs = template.FuncMap{
+	"contains": strings.Contains,
+}
 
 var initCmd = &cobra.Command{
 	Use:   "init",
@@ -50,11 +56,9 @@ var initCmd = &cobra.Command{
 			if err != nil {
 				panic(err)
 			}
-			tpl, err := template.ParseFiles(t)
-			if err != nil {
-				panic(err)
-			}
-			err = tpl.Execute(f, promptValues)
+			name := filepath.Base(t)
+			tpl := template.Must(template.New(name).Funcs(templateFuncs).ParseFiles(t))
+			err = tpl.ExecuteTemplate(f, name, promptValues)
 			if err != nil {
 				panic(err)
 			}
