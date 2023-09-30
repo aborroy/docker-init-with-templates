@@ -26,6 +26,7 @@ MessagingUser:
 MessagingPassword:    
    label: Choose the user password for your ActiveMQ user
    condition: Messaging==Yes and MessagingCredentials==Yes
+   password: true
    default: admin
 LegacyUI:
   label: Do you want to use the Legacy UI (Share)?
@@ -41,3 +42,10 @@ Volumes:
 Server:
   label: What is the name of your server?
   default: localhost
+Addons:
+  label: Select the addons to be installed
+  multiple: true
+  options:
+    - Order of the Bee Support Tools
+    - OCR Transformer
+    - Share Site Creators

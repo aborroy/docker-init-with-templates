@@ -14,6 +14,21 @@ Once the platform is ready, you will find a line similar to the following one in
 ```
 alfresco-1 | org.apache.catalina.startup.Catalina.start Server startup in [NNNNN] milliseconds
 ```
+{{- if .Addons}}
+## Installed addons
+
+Additional usage instructions for installed addons are available in:
+
+  {{- if contains .Addons "Share Site Creators"}}
+  * [Share Site Creators](https://github.com/jpotts/share-site-creators)
+  {{- end}}
+  {{- if contains .Addons "Order of the Bee Support Tools"}}
+  * [Order of the Bee Support Tools](https://github.com/OrderOfTheBee/ootbee-support-tools)
+  {{- end}}
+  {{- if contains .Addons "OCR Transformer"}}
+  * [OCR Transformer](https://github.com/aborroy/alf-tengine-ocr)
+  {{- end}}
+{{- end}}
 
 ## Service URLs
 

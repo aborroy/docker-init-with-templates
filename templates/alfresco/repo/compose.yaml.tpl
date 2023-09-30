@@ -1,13 +1,12 @@
 services:
   alfresco:
-{{- if eq .Database "postgres"}}
-    image: docker.io/alfresco/alfresco-content-repository-community:${REPO_TAG}
-{{- end}}
-{{- if eq .Database "mariadb"}}
+{{- if or (.Addons) (eq .Database "mariadb")}}
     build:
       context: .
       args:
         REPO_TAG: ${REPO_TAG}
+{{- else}}        
+    image: docker.io/alfresco/alfresco-content-repository-community:${REPO_TAG}
 {{- end}}
     environment:
       JAVA_TOOL_OPTIONS: >-
@@ -48,6 +47,9 @@ services:
 {{- else}}
         -Dmessaging.subsystem.autoStart=false
         -Drepo.event2.enabled=false
+{{- end}}
+{{- if contains .Addons "OCR Transformer"}}
+        -DlocalTransform.ocr.url=http://transform-ocr:8090/
 {{- end}}
 {{- if eq .Volumes "Bind"}}
     volumes:

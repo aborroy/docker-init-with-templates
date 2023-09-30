@@ -11,3 +11,6 @@ include:
   - ./transform/compose.yaml
   - ./search/compose.yaml
   - ./db/compose.yaml
+{{- if contains .Addons "OCR Transformer"}}
+  - ./ocr/compose.yaml
+{{- end}}  

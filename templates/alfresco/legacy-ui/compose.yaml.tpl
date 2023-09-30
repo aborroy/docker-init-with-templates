@@ -1,7 +1,14 @@
 {{- if eq .LegacyUI "Yes"}}
 services:
   share:
+{{- if .Addons}}
+    build:
+      context: .
+      args:
+        SHARE_TAG: ${SHARE_TAG}
+{{- else}}  
     image: docker.io/alfresco/alfresco-share:${SHARE_TAG}
+{{- end}}    
     environment:
       REPO_HOST: "alfresco"
       REPO_PORT: "8080"
