@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"strings"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/hashicorp/go-bexpr"
-	"github.com/manifoldco/promptui"
 	orderedmap "github.com/wk8/go-ordered-map/v2"
 	"gopkg.in/yaml.v3"
 )
@@ -15,50 +16,50 @@ type Prompt struct {
 	Label     string   `yaml:"label"`
 	Default   string   `yaml:"default"`
 	Condition string   `yaml:"condition"`
+	Multiple  bool     `yaml:"multiple"`
+	Password  bool     `yaml:"password"`
 	Options   []string `yaml:"options"`
 }
 
 func PromptGetSelect(prompt Prompt) string {
-	index := -1
 	var result string
-	var err error
-
-	for index < 0 {
-		p := promptui.Select{
-			Label:    prompt.Label,
-			Items:    prompt.Options,
-			HideHelp: true,
-		}
-
-		index, result, err = p.Run()
-
-		if index == -1 {
-			prompt.Options = append(prompt.Options, result)
-		}
+	p := &survey.Select{
+		Message: prompt.Label,
+		Options: prompt.Options,
 	}
-
-	if err != nil {
-		fmt.Printf("Prompt failed %v\n", err)
-		os.Exit(1)
-	}
-
+	survey.AskOne(p, &result)
 	return result
 }
 
 func PromptGetInput(prompt Prompt) string {
-	p := promptui.Prompt{
-		Label:   prompt.Label,
-		Default: prompt.Default,
+	var result string
+	var p survey.Prompt
+	if prompt.Password {
+		p = &survey.Password{
+			Message: prompt.Label,
+		}
+
+	} else {
+		p = &survey.Input{
+			Message: prompt.Label,
+			Default: prompt.Default,
+		}
 	}
-
-	result, err := p.Run()
-
-	if err != nil {
-		fmt.Printf("Prompt failed %v\n", err)
-		os.Exit(1)
+	survey.AskOne(p, &result)
+	if prompt.Password && result == "" {
+		result = prompt.Default
 	}
-
 	return result
+}
+
+func PromptGetMultiSelect(prompt Prompt) string {
+	res := []string{}
+	p := &survey.MultiSelect{
+		Message: prompt.Label,
+		Options: prompt.Options,
+	}
+	survey.AskOne(p, &res)
+	return strings.Join(res, ",")
 }
 
 func mapToStruct(m map[string]interface{}) reflect.Value {
@@ -118,7 +119,11 @@ func GetPromptValues(templateRootPath string, template string, cmdPromptValues m
 			visible := IsPromptVisible(pair.Value.Condition, m)
 			if visible {
 				if pair.Value.Options != nil {
-					result = PromptGetSelect(pair.Value)
+					if pair.Value.Multiple {
+						result = PromptGetMultiSelect(pair.Value)
+					} else {
+						result = PromptGetSelect(pair.Value)
+					}
 				} else {
 					result = PromptGetInput(pair.Value)
 				}
