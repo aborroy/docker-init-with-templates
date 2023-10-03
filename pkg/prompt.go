@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
 	"reflect"
 	"strings"
@@ -100,9 +101,13 @@ func IsPromptVisible(expression string, values map[string]interface{}) bool {
 
 func GetPromptValues(templateRootPath string, template string, cmdPromptValues map[string]string) reflect.Value {
 
-	file, err := os.ReadFile(templateRootPath + "/" + template + "/prompts.yaml")
+	// Read prompt file from embed FS or external FS
+	file, err := fs.ReadFile(TemplateFs, templateRootPath+"/"+template+"/prompts.yaml")
 	if err != nil {
-		panic(err)
+		file, err = os.ReadFile(templateRootPath + "/" + template + "/prompts.yaml")
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	data := orderedmap.New[string, Prompt]()

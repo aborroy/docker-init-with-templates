@@ -2,6 +2,7 @@ package docker
 
 import (
 	"fmt"
+	"io/fs"
 	"log"
 	"os"
 
@@ -15,7 +16,7 @@ var catalogCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if templateName == "" {
-			files, err := os.ReadDir("templates")
+			files, err := fs.ReadDir(TemplateFs, TemplateRootPath)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -36,7 +37,7 @@ var catalogCmd = &cobra.Command{
 				}
 			}
 		} else {
-			body, err := os.ReadFile("templates/" + templateName + "/prompts.yaml")
+			body, err := fs.ReadFile(TemplateFs, TemplateRootPath+"/"+templateName+"/prompts.yaml")
 			if err != nil {
 				if templateDirectory == "" {
 					log.Fatalf("unable to read file: %v", err)

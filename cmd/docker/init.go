@@ -46,7 +46,7 @@ var initCmd = &cobra.Command{
 		}
 		promptValues := pkg.GetPromptValues(templateRoot, templateName, defaultPromptValues)
 
-		templateList, err := pkg.GetTemplatesInPathHierarchy(templateRoot + "/" + templateName)
+		templateList, err := pkg.GetTemplatesInPathHierarchy(templateRoot+"/"+templateName, templateDirectory == "")
 		if err != nil {
 			panic(err)
 		}
@@ -57,7 +57,11 @@ var initCmd = &cobra.Command{
 				panic(err)
 			}
 			name := filepath.Base(t)
-			tpl := template.Must(template.New(name).Funcs(templateFuncs).ParseFiles(t))
+			// Parsing template files from embedded FS or external FS
+			tpl, err := template.New(name).Funcs(templateFuncs).ParseFS(pkg.TemplateFs, t)
+			if err != nil {
+				tpl = template.Must(template.New(name).Funcs(templateFuncs).ParseFiles(t))
+			}
 			err = tpl.ExecuteTemplate(f, name, promptValues)
 			if err != nil {
 				panic(err)

@@ -1,7 +1,9 @@
 package pkg
 
 import (
+	"embed"
 	"io"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -9,7 +11,29 @@ import (
 
 const TemplateExtension string = ".tpl"
 
-func GetTemplatesInPathHierarchy(path string) ([]string, error) {
+var TemplateFs embed.FS
+
+func EmbedWalk(root string) ([]string, error) {
+	var paths []string
+	fs.WalkDir(TemplateFs, root, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			panic(err)
+		}
+		if d.IsDir() {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		if strings.HasSuffix(path, TemplateExtension) {
+			paths = append(paths, path)
+		}
+		return nil
+	})
+	return paths, nil
+}
+
+func FilesystemWalk(path string) ([]string, error) {
 	var paths []string
 	err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -24,6 +48,14 @@ func GetTemplatesInPathHierarchy(path string) ([]string, error) {
 		return nil, err
 	}
 	return paths, nil
+}
+
+func GetTemplatesInPathHierarchy(path string, useFS bool) ([]string, error) {
+	if useFS {
+		return EmbedWalk(path)
+	} else {
+		return FilesystemWalk(path)
+	}
 }
 
 func CreateOutputFile(outputRoot string, outputFile string, templateName string) (io.Writer, string, error) {
