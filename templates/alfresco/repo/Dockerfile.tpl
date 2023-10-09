@@ -36,9 +36,9 @@ RUN curl -L https://github.com/Alfresco/alfresco-docker-installer/raw/master/gen
 RUN set -x \
         && yum install -y wget \
         && yum clean all \
-        && wget -P /tmp/ https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.2.0/mariadb-java-client-3.2.0.jar \
-        && cp /tmp/mariadb-java-client-3.2.0.jar /usr/local/tomcat/lib/ \
-        && rm -rf /tmp/mariadb-java-client-3.2.0.jar;
+        && wget -P /tmp/ https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/2.7.10/mariadb-java-client-2.7.10.jar \
+        && cp /tmp/mariadb-java-client-2.7.10.jar /usr/local/tomcat/lib/ \
+        && rm -rf /tmp/mariadb-java-client-2.7.10.jar;
 {{- end}}
 
 USER alfresco
