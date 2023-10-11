@@ -194,7 +194,7 @@ By default, `password` is set to `false`. If user typing should be screened as a
 
 ### Conditional
 
-The prompt is enabled only when a boolean `condition` is met. The condition can include any of the previous prompts as identifier and the expression is evaluated following [go-bexpr](https://github.com/hashicorp/go-bexpr) rules.
+The prompt is enabled only when a boolean `condition` is met. The condition can include any of the previous prompts as identifier and the expression is evaluated following [goval](https://github.com/maja42/goval) rules.
 
 ```yaml
 <id>
@@ -208,7 +208,7 @@ For instance:
 ```yaml
 MessagingUser:
    label: Choose the user name for your ActiveMQ user
-   condition: Messaging==Yes and MessagingCredentials==Yes
+   condition: Messaging=="Yes" && MessagingCredentials=="Yes"
    default: admin
 ```
 

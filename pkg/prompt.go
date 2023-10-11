@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/hashicorp/go-bexpr"
+	"github.com/maja42/goval"
 	orderedmap "github.com/wk8/go-ordered-map/v2"
 	"gopkg.in/yaml.v3"
 )
@@ -85,15 +85,17 @@ func setStructValues(sr reflect.Value, m map[string]interface{}) {
 func IsPromptVisible(expression string, values map[string]interface{}) bool {
 	var visible bool = true
 	if expression != "" {
-		eval, err := bexpr.CreateEvaluator(expression)
+		evaluator := goval.NewEvaluator()
+		result, err := evaluator.Evaluate(expression, values, nil)
 		if err != nil {
 			fmt.Printf("Failed to create evaluator for expression %q: %v\n", expression, err)
 			return false
 		}
-		visible, err = eval.Evaluate(values)
-		if err != nil {
-			fmt.Printf("Failed to run evaluation of expression %q: %v\n", expression, err)
+		if reflect.TypeOf(result).Kind() != reflect.Bool {
+			fmt.Printf("Expecting boolean result for expression %q, but found %s", expression, reflect.TypeOf(result))
 			return false
+		} else {
+			return reflect.ValueOf(result).Interface().(bool)
 		}
 	}
 	return visible
@@ -133,6 +135,10 @@ func GetPromptValues(templateRootPath string, template string, cmdPromptValues m
 					result = PromptGetInput(pair.Value)
 				}
 				m[pair.Key] = result
+			} else {
+				if pair.Value.Default != "" {
+					m[pair.Key] = pair.Value.Default
+				}
 			}
 		}
 	}

@@ -10,22 +10,24 @@ Database:
     - mariadb
 Messaging:
   label: Do you want to use the Events service (ActiveMQ)?
+  default: No
   options:
     - Yes
     - No
 MessagingCredentials:
   label: Do you want to use credentials for Events service?
-  condition: Messaging==Yes
+  condition: Messaging=="Yes"
+  default: No
   options:
     - Yes
     - No
 MessagingUser:
    label: Choose the user name for your ActiveMQ user
-   condition: Messaging==Yes and MessagingCredentials==Yes
+   condition: Messaging=="Yes" && MessagingCredentials=="Yes"
    default: admin
 MessagingPassword:    
    label: Choose the user password for your ActiveMQ user
-   condition: Messaging==Yes and MessagingCredentials==Yes
+   condition: Messaging=="Yes" && MessagingCredentials=="Yes"
    password: true
    default: admin
 LegacyUI:
