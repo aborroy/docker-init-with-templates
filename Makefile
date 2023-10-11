@@ -5,9 +5,9 @@ DARWIN_ARM64=$(EXECUTABLE)_darwin_arm64
 DARWIN_AMD64=$(EXECUTABLE)_darwin_amd64
 VERSION=$(shell git describe --tags --always --long --dirty)
 
-.PHONY: all clean
+.PHONY: all test clean
 
-all: build
+all: test build
 
 build: windows linux darwin-arm64 darwin-amd64
 	@echo version: $(VERSION)
@@ -31,6 +31,9 @@ $(DARWIN_ARM64):
 
 $(DARWIN_AMD64):
 	env GOOS=darwin GOARCH=amd64 go build -v -o $(DARWIN_AMD64) -ldflags="-s -w -X main.version=$(VERSION)"  ./main.go
+
+test:
+	cd test && ./test_alfresco.sh
 
 clean:
 	go clean
