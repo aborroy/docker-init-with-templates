@@ -22,6 +22,7 @@ function waitAlfrescoReady {
 
 cd ..
 
+# Alfresco Community
 go run main.go init -t alfresco \
 -p Version=7.4 \
 -p Database=postgres \
@@ -30,6 +31,24 @@ go run main.go init -t alfresco \
 -p Volumes=None \
 -p Server=localhost \
 -p Addons=None
+
+cd output
+
+docker compose up --detach --quiet-pull
+
+waitAlfrescoReady
+
+cleanup
+
+# Alfresco Enterprise
+go run main.go init -t alfresco-enterprise \
+-p Version=7.4 \
+-p Database=postgres \
+-p Transform=t-engine \
+-p Search=search-service \
+-p Sync=No \
+-p Messaging=No \
+-p LegacyUI=Yes
 
 cd output
 

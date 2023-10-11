@@ -1,0 +1,55 @@
+Version:
+  label: Which ACS version do you want to use?
+  options:
+    - 7.3
+    - 7.4
+Database:
+  label: Which Database Engine do you want to use?
+  options:
+    - postgres
+    - mariadb
+Transform:
+  label: Which Transform Engine do you want to use?
+  options:
+    - t-engine
+    - t-service
+Search:
+  label: Which Search Service Engine do you want to use?
+  options:
+    - search-service
+    - insight-engine
+    - search-enterprise-elasticsearch
+    - search-enterprise-opensearch
+Sync: 
+  label: Do you want to use the Sync Service?
+  options:
+    - Yes
+    - No
+Messaging:
+  label: Do you want to use the Events service (ActiveMQ)?
+  condition: Transform=="t-engine" && Sync=="No" && (Search=="search-service" || Search=="insight-engine")
+  default: Yes
+  options:
+    - Yes
+    - No
+MessagingCredentials:
+  label: Do you want to use credentials for Events service?
+  condition: Messaging=="Yes"
+  default: No
+  options:
+    - Yes
+    - No
+MessagingUser:
+   label: Choose the user name for your ActiveMQ user
+   condition: Messaging=="Yes" && MessagingCredentials=="Yes"
+   default: admin
+MessagingPassword:    
+   label: Choose the user password for your ActiveMQ user
+   condition: Messaging=="Yes" && MessagingCredentials=="Yes"
+   password: true
+   default: admin
+LegacyUI:
+  label: Do you want to use the Legacy UI (Share)?
+  options:
+    - Yes
+    - No
