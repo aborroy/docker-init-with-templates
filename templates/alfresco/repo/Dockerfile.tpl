@@ -10,9 +10,9 @@ RUN mkdir -p $TOMCAT_DIR/amps
 {{- end}}
 
 {{- if contains .Addons "Order of the Bee Support Tools"}}
-RUN curl -L https://github.com/Alfresco/alfresco-docker-installer/raw/master/generators/app/templates/addons/amps/support-tools-repo-1.2.0.0-amp.amp \
-    -o support-tools-repo-1.2.0.0-amp.amp && \
-    mv support-tools-repo-1.2.0.0-amp.amp $TOMCAT_DIR/amps
+RUN curl -L https://github.com/Alfresco/alfresco-docker-installer/raw/master/generators/app/templates/addons/amps/support-tools-repo-1.2.1.0-amp.amp \
+    -o support-tools-repo-1.2.1.0-amp.amp && \
+    mv support-tools-repo-1.2.1.0-amp.amp $TOMCAT_DIR/amps
 {{- end}}
 
 {{- if contains .Addons "Share Site Creators"}}
