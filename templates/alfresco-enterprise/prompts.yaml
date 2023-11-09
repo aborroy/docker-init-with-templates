@@ -3,6 +3,7 @@ Version:
   options:
     - 7.3
     - 7.4
+    - 23.1
 Database:
   label: Which Database Engine do you want to use?
   options:
