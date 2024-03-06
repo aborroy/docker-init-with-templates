@@ -2,6 +2,9 @@ services:
   digital-workspace:
     image: quay.io/alfresco/alfresco-digital-workspace:${ADW_TAG}
     mem_limit: 128m
+    depends_on:
+      alfresco:
+        condition: service_healthy
     environment:
       APP_CONFIG_AUTH_TYPE: "BASIC"
       APP_CONFIG_PROVIDER: "ECM"
@@ -10,6 +13,9 @@ services:
   control-center:
     image: quay.io/alfresco/alfresco-control-center:${CONTROL_CENTER_TAG}
     mem_limit: 128m
+    depends_on:
+      alfresco:
+        condition: service_healthy
     environment:
       APP_CONFIG_PROVIDER: "ECM"
       APP_CONFIG_AUTH_TYPE: "BASIC"

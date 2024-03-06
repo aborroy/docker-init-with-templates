@@ -15,7 +15,13 @@ services:
       ENABLE_CONTENT_APP: "false"
     depends_on:
       - alfresco
+{{- if eq .LegacyUI "Yes"}}
+      - share
+{{- end}}      
     ports:
       - "8080:8080"
     links:
       - alfresco
+{{- if eq .LegacyUI "Yes"}}
+      - share
+{{- end}}

@@ -15,3 +15,8 @@ services:
         --innodb-flush-method=O_DIRECT
         --wait_timeout=28800
 {{- end}}
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5

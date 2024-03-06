@@ -19,3 +19,6 @@ services:
           -Dalfresco.context=alfresco
           -Dalfresco.protocol=http
 {{- end}}
+    depends_on:
+      alfresco:
+        condition: service_healthy

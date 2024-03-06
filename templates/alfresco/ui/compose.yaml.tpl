@@ -3,3 +3,6 @@ services:
     image: docker.io/alfresco/alfresco-content-app:${UI_TAG}
     environment:
       APP_BASE_SHARE_URL: "http://localhost:8080/aca/#/preview/s"
+    depends_on:
+      alfresco:
+        condition: service_healthy      

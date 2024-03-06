@@ -15,3 +15,6 @@ services:
         -XX:-UseLargePages
         -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80
 {{- end}}
+    depends_on:
+      alfresco:
+        condition: service_healthy

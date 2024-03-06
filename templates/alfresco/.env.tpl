@@ -1,5 +1,16 @@
 SERVER_NAME={{.Server}}
 
+{{- if eq .Version "23.2"}}
+POSTGRES_TAG=15.6
+MARIADB_TAG=11.3.2
+ACTIVEMQ_TAG=5.18-jre17-rockylinux8
+PROXY_TAG=3.4.2
+REPO_TAG=23.2.1
+SEARCH_TAG=2.0.9.1
+TRANSFORM_TAG=5.1.0
+UI_TAG=4.4.0
+SHARE_TAG=23.2.1
+{{- end}}
 {{- if eq .Version "23.1"}}
 POSTGRES_TAG=14.4
 MARIADB_TAG=11.1.2

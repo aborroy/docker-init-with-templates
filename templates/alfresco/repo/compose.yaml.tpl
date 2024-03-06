@@ -8,6 +8,13 @@ services:
 {{- else}}        
     image: docker.io/alfresco/alfresco-content-repository-community:${REPO_TAG}
 {{- end}}
+    depends_on:
+{{- if eq .Database "postgres"}}
+      postgres:
+{{- else}}        
+      mariadb:
+{{- end}}      
+        condition: service_healthy
     environment:
       JAVA_TOOL_OPTIONS: >-
         -Dencryption.keystore.type=JCEKS
@@ -51,6 +58,16 @@ services:
 {{- if contains .Addons "OCR Transformer"}}
         -DlocalTransform.ocr.url=http://transform-ocr:8090/
 {{- end}}
+    healthcheck:
+        test:
+            - CMD
+            - curl
+            - -f
+            - http://localhost:8080/alfresco/api/-default-/public/alfresco/versions/1/probes/-ready-
+        interval: 30s
+        timeout: 3s
+        retries: 3
+        start_period: 1m
 {{- if eq .Volumes "Bind"}}
     volumes:
       - ./data/alf-repo-data:/usr/local/tomcat/alf_data

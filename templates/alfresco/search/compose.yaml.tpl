@@ -1,6 +1,9 @@
 services:
   solr6:
     image: docker.io/alfresco/alfresco-search-services:${SEARCH_TAG}
+    depends_on:
+      alfresco:
+        condition: service_healthy    
     environment:
       SOLR_ALFRESCO_HOST: "alfresco"
       SOLR_ALFRESCO_PORT: "8080"

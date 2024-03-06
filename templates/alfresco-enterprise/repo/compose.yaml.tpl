@@ -8,6 +8,13 @@ services:
 {{- else}}        
     image: quay.io/alfresco/alfresco-content-repository:${ALFRESCO_TAG}
 {{- end}}
+    depends_on:
+{{- if eq .Database "postgres"}}
+      postgres:
+{{- else}}        
+      mariadb:
+{{- end}}      
+        condition: service_healthy
     environment:
       JAVA_TOOL_OPTIONS: >-
         -Dencryption.keystore.type=JCEKS
@@ -63,3 +70,13 @@ services:
         -Dmessaging.subsystem.autoStart=false
         -Drepo.event2.enabled=false
 {{- end}}
+    healthcheck:
+        test:
+            - CMD
+            - curl
+            - -f
+            - http://localhost:8080/alfresco/api/-default-/public/alfresco/versions/1/probes/-ready-
+        interval: 30s
+        timeout: 3s
+        retries: 3
+        start_period: 1m
