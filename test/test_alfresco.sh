@@ -24,7 +24,7 @@ cd ..
 
 # Alfresco Community
 go run main.go init -t alfresco \
--p Version=25.1 \
+-p Version=25.2 \
 -p Database=postgres \
 -p Messaging=No \
 -p LegacyUI=Yes \
@@ -42,7 +42,7 @@ cleanup
 
 # Alfresco Enterprise
 go run main.go init -t alfresco-enterprise \
--p Version=25.1 \
+-p Version=25.2 \
 -p Database=postgres \
 -p Transform=t-engine \
 -p Search=search-service \
